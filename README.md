@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a guided project from the "Blockchain Developer Nanodegree Program".
+This is a guided project from the Udacity "Blockchain Developer Nanodegree Program".
 
 This project aims to create my own blockchain to demonstrate familiarity with the fundamental concepts of a Blockchain platform:
 - Block
