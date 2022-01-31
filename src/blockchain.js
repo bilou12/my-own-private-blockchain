@@ -130,9 +130,20 @@ class Blockchain {
                 if ( messageIsVerified ) {
                     const data = { address: address, star: star }
                     const block = new BlockClass.Block(data);
-                    self._addBlock(block);
-                    self.validateChain()
-                    resolve(block);
+                    await self._addBlock(block);
+
+                    // validate the chain
+                    const chainIsValid = self.validateChain()
+                    chainIsValid.then(value => {
+                        console.log('value:' + value)
+                        if (value.length === 0) {
+                            console.log('ok')
+                            resolve(block);
+                        } else {
+                            console.log('nok')
+                            reject({msg: "The chain cannot be validated"});
+                        }
+                    })
                 } else {
                     reject({msg: "The message is not verified"});
                 }
@@ -216,11 +227,22 @@ class Blockchain {
                 const valid = block.validate();
                 valid.then(value => {
                     if (value === false) {
-                        errorLog.push('Error on block height: ' + i)
+                        errorLog.push('Error on block height: ' + i + 'Cannot validate the block.')
                     } else {
                         console.log('Chain is valid on block height: ' + i)
                     }
                 })
+
+                if ( i !=0 ) {
+                    const previousBlock = self.chain[i-1];
+                    const previousBlockHash = block.previousBlockHash;
+                    const hashPreviousBlock = previousBlock.hash;
+                    console.log('previousBlockHash: ' + previousBlockHash)
+                    console.log('hashPreviousBlock: ' + hashPreviousBlock)
+                    if (previousBlockHash !=  hashPreviousBlock) {
+                        errorLog.push('Error on block height: ' + i + 'previousBlockHash does not match with the hash of the previous block.')
+                    }
+                }
             }
             resolve(errorLog);
         });
