@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a guided project from the "Blockchain Developer Nanodegree Program".
+This is a guided project from the Udacity "Blockchain Developer Nanodegree Program".
 
 This project aims to create my own blockchain to demonstrate familiarity with the fundamental concepts of a Blockchain platform:
 - Block
@@ -19,8 +19,8 @@ He is an astronomy fan and because of that he spends most of his free time searc
 
 ## Testing the application
 
-[Get genesis block](resources/1_get_genesis_block.PNG)
-[Post request validation](resources/2_post_request_validation.PNG)
-[Sign message with bitcoin wallet](resources/3_sign_message_with_wallet.PNG)
-[Submit a star](resources/4_submit_a_star.PNG)
-[Get all stars owned by an address](resources/5_get_stars_owned_by_an_address.PNG)
+- [Get genesis block](resources/1_get_genesis_block.PNG)
+- [Post request validation](resources/2_post_request_validation.PNG)
+- [Sign message with bitcoin wallet](resources/3_sign_message_with_wallet.PNG)
+- [Submit a star](resources/4_submit_a_star.PNG)
+- [Get all stars owned by an address](resources/5_get_stars_owned_by_an_address.PNG)
