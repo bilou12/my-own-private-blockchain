@@ -41,7 +41,8 @@ class Block {
             // Save in auxiliary variable the current block hash
             const expectedHash = self.hash;
             // Recalculate the hash of the Block
-            const actualHash = SHA256(JSON.stringify(self.time + self.previousBlockHash + self.body + self.height)).toString()
+            let clonedBlock = {...self, hash:null};
+            const actualHash = SHA256(JSON.stringify(clonedBlock)).toString()
             // Comparing if the hashes changed
             if (expectedHash === actualHash) {
                 resolve(true);
