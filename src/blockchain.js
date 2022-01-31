@@ -71,7 +71,7 @@ class Blockchain {
                 }
                 block.time = new Date().getTime().toString().slice(0, -3);
                 block.height = self.height + 1;
-                block.hash = SHA256(JSON.stringify(block.time + block.previousBlockHash + block.body + block.height)).toString()
+                block.hash = SHA256(JSON.stringify(block)).toString()
                 
                 self.height = block.height;
                 self.chain.push(block);
@@ -132,18 +132,10 @@ class Blockchain {
                     const block = new BlockClass.Block(data);
                     await self._addBlock(block);
 
-                    // validate the chain
-                    const chainIsValid = self.validateChain()
-                    chainIsValid.then(value => {
-                        console.log('value:' + value)
-                        if (value.length === 0) {
-                            console.log('ok')
-                            resolve(block);
-                        } else {
-                            console.log('nok')
-                            reject({msg: "The chain cannot be validated"});
-                        }
-                    })
+                    let invalidBlocks = await self.validateChain();
+                    if(invalidBlocks.length == 0) {
+                     resolve(block);
+                    }
                 } else {
                     reject({msg: "The message is not verified"});
                 }
@@ -162,7 +154,7 @@ class Blockchain {
     getBlockByHash(hash) {
         let self = this;
         return new Promise((resolve, reject) => {
-            const block = self.chain.filter(p => p.hash === hash)[0];
+            const block = self.chain.find(p => p.hash === hash);
             if(block){
                 resolve(block);
             } else {
@@ -228,8 +220,6 @@ class Blockchain {
                 valid.then(value => {
                     if (value === false) {
                         errorLog.push('Error on block height: ' + i + 'Cannot validate the block.')
-                    } else {
-                        console.log('Chain is valid on block height: ' + i)
                     }
                 })
 
@@ -237,8 +227,6 @@ class Blockchain {
                     const previousBlock = self.chain[i-1];
                     const previousBlockHash = block.previousBlockHash;
                     const hashPreviousBlock = previousBlock.hash;
-                    console.log('previousBlockHash: ' + previousBlockHash)
-                    console.log('hashPreviousBlock: ' + hashPreviousBlock)
                     if (previousBlockHash !=  hashPreviousBlock) {
                         errorLog.push('Error on block height: ' + i + 'previousBlockHash does not match with the hash of the previous block.')
                     }
