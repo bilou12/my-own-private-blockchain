@@ -135,6 +135,8 @@ class Blockchain {
                     let invalidBlocks = await self.validateChain();
                     if(invalidBlocks.length == 0) {
                      resolve(block);
+                    } else {
+                        reject({msg: "The chain cannot be resolved because there are some invalid blocks."});
                     }
                 } else {
                     reject({msg: "The message is not verified"});
