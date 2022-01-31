@@ -19,4 +19,8 @@ He is an astronomy fan and because of that he spends most of his free time searc
 
 ## Testing the application
 
-[Get Genesis block](resources/1_get_genesis_block.PNG)
+[Get genesis block](resources/1_get_genesis_block.PNG)
+[Post request validation](resources/2_post_request_validation.PNG)
+[Sign message with bitcoin wallet](resources/3_sign_message_with_wallet.PNG)
+[Submit a star](resources/4_submit_a_star.PNG)
+[Get all stars owned by an address](resources/5_get_stars_owned_by_an_address.PNG)
