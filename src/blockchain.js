@@ -128,13 +128,13 @@ class Blockchain {
             if ( elapsedTimeInSeconds < 60 * 5) {
                 const messageIsVerified = bitcoinMessage.verify(message, address, signature);
                 if ( messageIsVerified ) {
-                    const data = { address: address, star: star }
-                    const block = new BlockClass.Block(data);
-                    await self._addBlock(block);
-
                     let invalidBlocks = await self.validateChain();
                     if(invalidBlocks.length == 0) {
-                     resolve(block);
+                        const data = { address: address, star: star }
+                        const block = new BlockClass.Block(data);
+                        await self._addBlock(block);
+    
+                        resolve(block);
                     } else {
                         reject({msg: "The chain cannot be resolved because there are some invalid blocks."});
                     }
@@ -215,15 +215,56 @@ class Blockchain {
     validateChain() {
         let self = this;
         let errorLog = [];
+        // implementation #1 with promises.all()
+        // return new Promise(async (resolve, reject) => {
+        //     let valids = [];
+        //     for (let i = 0; i <= self.height; i++) {
+        //         let block = self.chain[i];
+        //         const valid = block.validate();
+        //         valids.push(valid);
+
+        //         if ( i !=0 ) {
+        //             const previousBlock = self.chain[i-1];
+        //             const previousBlockHash = block.previousBlockHash;
+        //             const hashPreviousBlock = previousBlock.hash;
+        //             if (previousBlockHash !=  hashPreviousBlock) {
+        //                 errorLog.push('Error on block height: ' + i + 'previousBlockHash does not match with the hash of the previous block.')
+        //             }
+        //         }
+        //     }
+
+        //     console.log('valids: ' + valids)
+
+        //     Promise.all(valids).then(values => {
+        //         console.log('promise all');
+        //         console.log('values: ' + values);
+        //         for ( let j = 0; j <= values.height; j++ ){
+        //             console.log('j: ' + j);
+        //             let value = values[j];
+        //             console.log('value: ' + value);
+        //             if (value === false) {
+        //                 errorLog.push('Error on block height: ' + i + 'Cannot validate the block.');
+        //             } else if (value === true) {
+        //                 errorLog.push('its ok');
+        //             }}
+        //         }
+        //     )
+
+        //     console.log('errorLog: ' + errorLog);
+
+        //     resolve(errorLog);
+
+        // Implementation #2 with await
         return new Promise(async (resolve, reject) => {
             for (let i = 0; i <= self.height; i++) {
                 let block = self.chain[i];
-                const valid = block.validate();
-                valid.then(value => {
-                    if (value === false) {
-                        errorLog.push('Error on block height: ' + i + 'Cannot validate the block.')
-                    }
-                })
+                let valid = await block.validate();
+
+                console.log('valid: ' + valid + ' at block height:' + i);
+
+                if (valid === false) {
+                    errorLog.push('Error on block height: ' + i + 'Cannot validate the block.');
+                }
 
                 if ( i !=0 ) {
                     const previousBlock = self.chain[i-1];
@@ -237,7 +278,6 @@ class Blockchain {
             resolve(errorLog);
         });
     }
-
 }
 
 module.exports.Blockchain = Blockchain;   
